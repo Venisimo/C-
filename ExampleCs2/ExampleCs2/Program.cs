@@ -150,6 +150,8 @@ namespace ExampleCs2
                 WildDuck WDuck = new WildDuck();
                 WDuck.AlertSwim();
                 WDuck.AlertFly();
+                WDuck.Flying = new SlowFly();
+                WDuck.AlertFly();
                 WDuck.AlertEat();
                 WDuck.AlertKrya();
                 HomeDuck HDuck = new HomeDuck();
