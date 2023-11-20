@@ -15,6 +15,7 @@ namespace Coursework
         static string infoVictory = "Победил ";
         static List<Character> listCharacter = new List<Character>();
         static List<String> logActions = new List<string>();
+        //static List<String> listBuff = new List<string>();
 
         static Random rnd = new Random();
 
@@ -22,10 +23,6 @@ namespace Coursework
         static GameMode()
         {
             isGameOver = false;
-        }
-        public static bool GetTurn()
-        {
-            return turn;
         }
         public static void SpawnCharacter()
         {
@@ -83,6 +80,7 @@ namespace Coursework
                     listCharacter[0].isTurn(listCharacter[1]);
                     checkIsGameOver();
                     turn = false;
+                    countTurn++;
                     System.Threading.Thread.Sleep(100);
                 }
                 else
@@ -90,6 +88,7 @@ namespace Coursework
                     listCharacter[1].isTurn(listCharacter[0]);
                     checkIsGameOver();
                     turn = true;
+                    countTurn++;
                     System.Threading.Thread.Sleep(100);
                 }
             }
@@ -146,6 +145,10 @@ namespace Coursework
         public double CurrentDM;
         public double BaseDM;
         public string Name;
+        public void enemyTurn(Character enemy)
+        {
+            Defend(enemy);
+        }
         public void isTurn(Character enemy)
         {
             BeginTurn(enemy);
@@ -153,33 +156,49 @@ namespace Coursework
             EndTurn(enemy);
             GameMode.PrintInfoCharacter();
         }
+        public abstract void Defend(Character enemy);
         public abstract void BeginTurn(Character enemy);
         public abstract void InTurn(Character enemy);
         public abstract void EndTurn(Character enemy);
     }
+    
     class Goblin : Character
     {
         static Random rnd = new Random();
-        bool CurrentTurn = GameMode.GetTurn();
         public Goblin(double MaxHP, double BaseDM)
         {
             this.MaxHP = MaxHP;
             CurrentHP = MaxHP;
             this.BaseDM = BaseDM;
             CurrentDM = BaseDM;
-            Name = "Goblach";
+            Name = "Гоблин";
         }
+        abstract class DamageController
+        {
+            public abstract double ModifyDamage(double incomingDamage);
+        }
+        private class DamageModifier : DamageController
+        {
+            public override double ModifyDamage(double incomingDamage)
+            {
+                return incomingDamage - 5;
+            }
+        }
+
         public void Attack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
             GameMode.InsertLog(Name, "Атака", enemy.Name);
         }
-        public void Defend(Character enemy)
+
+        public override void Defend(Character enemy)
         {
-            double DefDM = enemy.CurrentDM - 5;
-            CurrentHP += DefDM;
+            DamageModifier damageModifier = new DamageModifier();
+            double modifiedDamage = damageModifier.ModifyDamage(enemy.CurrentDM);
+            CurrentHP += (enemy.CurrentDM - modifiedDamage);
             GameMode.InsertLog(Name, "Защита", enemy.Name);
         }
+
         public void DoubleAttack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
@@ -189,8 +208,6 @@ namespace Coursework
         }
         public void Dodge(Character enemy)
         {
-            double DodgeDM = enemy.CurrentDM;
-            CurrentHP += DodgeDM;
             GameMode.InsertLog(Name, "Уклонение", enemy.Name);
         }
         public void Persistence(Character enemy)
@@ -203,68 +220,62 @@ namespace Coursework
         }
         public override void BeginTurn(Character enemy)
         {
-            if (CurrentTurn) 
-            {
-                DoubleAttack(enemy);
-            }
+            DoubleAttack(enemy);
         }
         public override void InTurn(Character enemy)
         {
-            if (!CurrentTurn)
-            {
-                int randomNum = 0 + rnd.Next(-1, 1);
-                if (randomNum == 0)
-                {
-                    Dodge(enemy);
-                }
-                else
-                {
-                    Defend(enemy);
-                }
-            }         
+            //здесь будет защита
         }
         public override void EndTurn(Character enemy)
         {
-            if (CurrentTurn) 
-            {
-                Attack(enemy);
-            }
-            if (!CurrentTurn)
-            {
-                int randomNum = 0 + rnd.Next(-1, 1);
-                if (randomNum == 0)
-                {
-                    Persistence(enemy);
-                }
-                else
-                {
-                }
-            }
+            Attack(enemy);
+            //int randomNum = 0 + rnd.Next(-1, 1);
+            //if (randomNum == 0)
+            //{
+            //    Persistence(enemy);
+            //}
+            //else
+            //{
+            //}
         }
     }
     class GoblinCharms : Character
     {
         static Random rnd = new Random();
-        bool CurrentTurn = GameMode.GetTurn();
         public GoblinCharms(double MaxHP, double BaseDM)
         {
             this.MaxHP = MaxHP;
             CurrentHP = MaxHP;
             this.BaseDM = BaseDM;
             CurrentDM = BaseDM;
-            Name = "GoblinCharms";
+            Name = "Зачарованный гоблин";
         }
+        abstract class DamageController
+        {
+            public abstract double ModifyDamage(double incomingDamage);
+        }
+        private class DamageModifier : DamageController
+        {
+            public override double ModifyDamage(double incomingDamage)
+            {
+                return incomingDamage - 5;
+            }
+        }
+
         public void Attack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
             GameMode.InsertLog(Name, "Атака", enemy.Name);
         }
-        public void Defend(Character enemy)
+
+        public override void Defend(Character enemy)
         {
-            double DefDM = enemy.CurrentDM - 5;
-            CurrentHP += DefDM;
+            DamageModifier damageModifier = new DamageModifier();
+            double modifiedDamage = damageModifier.ModifyDamage(enemy.CurrentDM);
+            enemy.CurrentHP += (enemy.CurrentDM - modifiedDamage); 
             GameMode.InsertLog(Name, "Защита", enemy.Name);
         }
+
         public void DoubleAttack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
@@ -274,8 +285,6 @@ namespace Coursework
         }
         public void Dodge(Character enemy)
         {
-            double DodgeDM = enemy.CurrentDM;
-            CurrentHP += DodgeDM;
             GameMode.InsertLog(Name, "Уклонение", enemy.Name);
         }
         public void Persistence(Character enemy)
@@ -288,43 +297,23 @@ namespace Coursework
         }
         public override void BeginTurn(Character enemy)
         {
-            if (CurrentTurn)
-            {
-                DoubleAttack(enemy);
-            }
+            DoubleAttack(enemy);
         }
         public override void InTurn(Character enemy)
         {
-            if (!CurrentTurn)
-            {
-                int randomNum = 0 + rnd.Next(-1, 1);
-                if (randomNum == 0)
-                {
-                    Dodge(enemy);
-                }
-                else
-                {
-                    Defend(enemy);
-                }
-            }
+            //здесь будет защита
         }
         public override void EndTurn(Character enemy)
         {
-            if (CurrentTurn)
-            {
-                Attack(enemy);
-            }
-            if (!CurrentTurn)
-            {
-                int randomNum = 0 + rnd.Next(-1, 1);
-                if (randomNum == 0)
-                {
-                    Persistence(enemy);
-                }
-                else
-                {
-                }
-            }
+            Attack(enemy);
+            //int randomNum = 0 + rnd.Next(-1, 1);
+            //if (randomNum == 0)
+            //{
+            //    Persistence(enemy);
+            //}
+            //else
+            //{
+            //}
         }
     }
     class Program
