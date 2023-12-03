@@ -13,9 +13,8 @@ namespace Coursework
         static int MaxTurn = 100;
         static bool turn = true;
         static string infoVictory = "Победил ";
-        static List<Character> listCharacter = new List<Character>();
+        public static List<Character> listCharacter = new List<Character>();
         static List<String> logActions = new List<string>();
-        //static List<String> listBuff = new List<string>();
 
         static Random rnd = new Random();
 
@@ -29,7 +28,7 @@ namespace Coursework
             bool oneHero = true, twoHero = true;
             while (oneHero || twoHero)
             {
-                Console.WriteLine("Выберите 1-ого героя: \n1. Гоблин\n2. Зачарованный гоблин");
+                Console.WriteLine("Выберите 1-ого героя: \n1. Зачарованный гоблин\n2. Простой гоблин");
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -39,12 +38,12 @@ namespace Coursework
                         break;
                     case "2":
                         // listCharacter.Add(new SuperMage(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        listCharacter.Add(new GoblinCharms(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
+                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         //listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         oneHero = false;
                         break;
                 }
-                Console.WriteLine("Выберите 2-ого героя: \n1. Гоблин\n2. Зачарованный гоблин");
+                Console.WriteLine("Выберите 1-ого героя: \n1. Зачарованный гоблин\n2. Простой гоблин");
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -54,7 +53,7 @@ namespace Coursework
                         break;
                     case "2":
                         // listCharacter.Add(new SuperMage(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        listCharacter.Add(new GoblinCharms(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
+                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         //listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         twoHero = false;
                         break;
@@ -140,14 +139,38 @@ namespace Coursework
     }
     abstract class Character
     {
-        public double CurrentHP;
+        public double currentHP;
         public double MaxHP;
         public double CurrentDM;
         public double BaseDM;
         public string Name;
-        public void enemyTurn(Character enemy)
+        Character enemyProverka;
+        public Character Method()
         {
-            Defend(enemy);
+            if (GameMode.listCharacter[0].Name == "Зачарованный гоблин by Ваня")
+            {
+                enemyProverka = GameMode.listCharacter[1];
+            }
+            else if (GameMode.listCharacter[1].Name == "Зачарованный гоблин by Ваня")
+            {
+                enemyProverka = GameMode.listCharacter[0];
+            }
+            return enemyProverka;
+        }
+        public virtual double Action(double value, Character enemy)
+        {
+            return value;
+        }
+        public double CurrentHP
+        {
+            get { return currentHP; }
+            set
+            {
+                if (value != currentHP)
+                {
+                    currentHP = Action(value, Method());
+                }
+            }
         }
         public void isTurn(Character enemy)
         {
@@ -156,164 +179,103 @@ namespace Coursework
             EndTurn(enemy);
             GameMode.PrintInfoCharacter();
         }
-        public abstract void Defend(Character enemy);
+
         public abstract void BeginTurn(Character enemy);
         public abstract void InTurn(Character enemy);
         public abstract void EndTurn(Character enemy);
     }
-    
+
     class Goblin : Character
     {
         static Random rnd = new Random();
         public Goblin(double MaxHP, double BaseDM)
         {
             this.MaxHP = MaxHP;
-            CurrentHP = MaxHP;
+            currentHP = MaxHP;
             this.BaseDM = BaseDM;
             CurrentDM = BaseDM;
-            Name = "Гоблин";
+            Name = "Зачарованный гоблин by Ваня";
         }
-        abstract class DamageController
+        public override double Action(double value, Character enemy)
         {
-            public abstract double ModifyDamage(double incomingDamage);
-        }
-        private class DamageModifier : DamageController
-        {
-            public override double ModifyDamage(double incomingDamage)
+            if (0 == 0 + rnd.Next(-3, 3) && value > 0)
             {
-                return incomingDamage - 5;
+                value = currentHP;
+                GameMode.InsertLog(Name, "Уклонение", enemy.Name);
             }
+            if (0 == 0 + rnd.Next(-1, 1) && value < 0)
+            {
+                value = 1;
+                GameMode.InsertLog(Name, "Стойкость", enemy.Name);
+            }
+            return value;
         }
-
         public void Attack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
             GameMode.InsertLog(Name, "Атака", enemy.Name);
         }
-
-        public override void Defend(Character enemy)
+        public void Heal()
         {
-            DamageModifier damageModifier = new DamageModifier();
-            double modifiedDamage = damageModifier.ModifyDamage(enemy.CurrentDM);
-            CurrentHP += (enemy.CurrentDM - modifiedDamage);
-            GameMode.InsertLog(Name, "Защита", enemy.Name);
+            if (CurrentHP != MaxHP)
+            {
+                CurrentHP += 5;
+                GameMode.InsertLog(Name, "Залечил раны", Name);
+            }
         }
 
         public void DoubleAttack(Character enemy)
         {
-            enemy.CurrentHP -= CurrentDM;
-            enemy.CurrentHP -= (CurrentDM / 2);
+            enemy.CurrentHP -= CurrentDM + (CurrentDM / 2);
             GameMode.InsertLog(Name, "Двойная атака", enemy.Name);
 
         }
-        public void Dodge(Character enemy)
-        {
-            GameMode.InsertLog(Name, "Уклонение", enemy.Name);
-        }
-        public void Persistence(Character enemy)
-        {
-            if (CurrentHP < enemy.CurrentDM + (enemy.CurrentDM / 2))
-            {
-                CurrentHP = 1;
-            }
-            GameMode.InsertLog(Name, "Стойкость", enemy.Name);
-        }
         public override void BeginTurn(Character enemy)
         {
-            DoubleAttack(enemy);
+            Attack(enemy);
         }
         public override void InTurn(Character enemy)
         {
-            //здесь будет защита
+            DoubleAttack(enemy);
         }
         public override void EndTurn(Character enemy)
         {
-            Attack(enemy);
-            //int randomNum = 0 + rnd.Next(-1, 1);
-            //if (randomNum == 0)
-            //{
-            //    Persistence(enemy);
-            //}
-            //else
-            //{
-            //}
+            Heal();
         }
     }
-    class GoblinCharms : Character
+    class SimpleGoblin : Character
     {
         static Random rnd = new Random();
-        public GoblinCharms(double MaxHP, double BaseDM)
+        public SimpleGoblin(double MaxHP, double BaseDM)
         {
             this.MaxHP = MaxHP;
-            CurrentHP = MaxHP;
+            currentHP = MaxHP;
             this.BaseDM = BaseDM;
             CurrentDM = BaseDM;
-            Name = "Зачарованный гоблин";
+            Name = "Простой гоблин";
         }
-        abstract class DamageController
-        {
-            public abstract double ModifyDamage(double incomingDamage);
-        }
-        private class DamageModifier : DamageController
-        {
-            public override double ModifyDamage(double incomingDamage)
-            {
-                return incomingDamage - 5;
-            }
-        }
-
         public void Attack(Character enemy)
         {
             enemy.CurrentHP -= CurrentDM;
             GameMode.InsertLog(Name, "Атака", enemy.Name);
         }
 
-        public override void Defend(Character enemy)
-        {
-            DamageModifier damageModifier = new DamageModifier();
-            double modifiedDamage = damageModifier.ModifyDamage(enemy.CurrentDM);
-            enemy.CurrentHP += (enemy.CurrentDM - modifiedDamage); 
-            GameMode.InsertLog(Name, "Защита", enemy.Name);
-        }
-
         public void DoubleAttack(Character enemy)
         {
-            enemy.CurrentHP -= CurrentDM;
-            enemy.CurrentHP -= (CurrentDM / 2);
+            enemy.CurrentHP -= CurrentDM + (CurrentDM / 2);
             GameMode.InsertLog(Name, "Двойная атака", enemy.Name);
 
         }
-        public void Dodge(Character enemy)
-        {
-            GameMode.InsertLog(Name, "Уклонение", enemy.Name);
-        }
-        public void Persistence(Character enemy)
-        {
-            if (CurrentHP < enemy.CurrentDM + (enemy.CurrentDM / 2))
-            {
-                CurrentHP = 1;
-            }
-            GameMode.InsertLog(Name, "Стойкость", enemy.Name);
-        }
         public override void BeginTurn(Character enemy)
         {
-            DoubleAttack(enemy);
+            Attack(enemy);
         }
         public override void InTurn(Character enemy)
         {
-            //здесь будет защита
+            DoubleAttack(enemy);
         }
         public override void EndTurn(Character enemy)
         {
-            Attack(enemy);
-            //int randomNum = 0 + rnd.Next(-1, 1);
-            //if (randomNum == 0)
-            //{
-            //    Persistence(enemy);
-            //}
-            //else
-            //{
-            //}
         }
     }
     class Program
