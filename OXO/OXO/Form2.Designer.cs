@@ -53,6 +53,7 @@ namespace OXO
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button11 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -95,7 +96,7 @@ namespace OXO
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.93617F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.06383F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121F));
             this.tableLayoutPanel1.Controls.Add(this.button10, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.button9, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.button5, 0, 1);
@@ -121,7 +122,7 @@ namespace OXO
             this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button10.Location = new System.Drawing.Point(228, 240);
+            this.button10.Location = new System.Drawing.Point(235, 240);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(109, 104);
             this.button10.TabIndex = 27;
@@ -134,9 +135,9 @@ namespace OXO
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button9.Location = new System.Drawing.Point(114, 240);
+            this.button9.Location = new System.Drawing.Point(117, 240);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(107, 104);
+            this.button9.Size = new System.Drawing.Size(104, 104);
             this.button9.TabIndex = 27;
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
@@ -149,7 +150,7 @@ namespace OXO
             this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button5.Location = new System.Drawing.Point(4, 115);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(102, 104);
+            this.button5.Size = new System.Drawing.Size(100, 104);
             this.button5.TabIndex = 24;
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -160,7 +161,7 @@ namespace OXO
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button4.Location = new System.Drawing.Point(228, 4);
+            this.button4.Location = new System.Drawing.Point(235, 4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(109, 104);
             this.button4.TabIndex = 23;
@@ -175,7 +176,7 @@ namespace OXO
             this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button2.Location = new System.Drawing.Point(4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(102, 104);
+            this.button2.Size = new System.Drawing.Size(100, 104);
             this.button2.TabIndex = 21;
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -186,9 +187,9 @@ namespace OXO
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button3.Location = new System.Drawing.Point(114, 4);
+            this.button3.Location = new System.Drawing.Point(117, 4);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(107, 104);
+            this.button3.Size = new System.Drawing.Size(104, 104);
             this.button3.TabIndex = 22;
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -199,9 +200,9 @@ namespace OXO
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button6.Location = new System.Drawing.Point(114, 115);
+            this.button6.Location = new System.Drawing.Point(117, 115);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(107, 104);
+            this.button6.Size = new System.Drawing.Size(104, 104);
             this.button6.TabIndex = 25;
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
@@ -212,7 +213,7 @@ namespace OXO
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button7.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button7.Location = new System.Drawing.Point(228, 115);
+            this.button7.Location = new System.Drawing.Point(235, 115);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(109, 104);
             this.button7.TabIndex = 26;
@@ -227,7 +228,7 @@ namespace OXO
             this.button8.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button8.Location = new System.Drawing.Point(4, 240);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(103, 104);
+            this.button8.Size = new System.Drawing.Size(100, 104);
             this.button8.TabIndex = 27;
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
@@ -346,6 +347,16 @@ namespace OXO
             this.button11.UseVisualStyleBackColor = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(599, 277);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(110, 52);
+            this.button12.TabIndex = 24;
+            this.button12.Text = "Обновить";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -353,6 +364,7 @@ namespace OXO
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Info;
             this.ClientSize = new System.Drawing.Size(751, 631);
+            this.Controls.Add(this.button12);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -405,5 +417,6 @@ namespace OXO
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
     }
 }

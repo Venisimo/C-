@@ -13,7 +13,7 @@ namespace Coursework
         static int MaxTurn = 100;
         static bool turn = true;
         static string infoVictory = "Победил ";
-        public static List<Character> listCharacter = new List<Character>();
+        static List<Character> listCharacter = new List<Character>();
         static List<String> logActions = new List<string>();
 
         static Random rnd = new Random();
@@ -32,14 +32,11 @@ namespace Coursework
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        //listCharacter.Add(new SimpleMage(100 + rnd.Next(-10, 10),20+rnd.Next(-2,2)));
                         listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         oneHero = false;
                         break;
                     case "2":
-                        // listCharacter.Add(new SuperMage(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        //listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
+                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-1, 1)));
                         oneHero = false;
                         break;
                 }
@@ -47,14 +44,11 @@ namespace Coursework
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        // listCharacter.Add(new SimpleMage(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
                         twoHero = false;
                         break;
                     case "2":
-                        // listCharacter.Add(new SuperMage(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
-                        //listCharacter.Add(new Goblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-2, 2)));
+                        listCharacter.Add(new SimpleGoblin(100 + rnd.Next(-10, 10), 20 + rnd.Next(-1, 1)));
                         twoHero = false;
                         break;
                 }
@@ -139,25 +133,12 @@ namespace Coursework
     }
     abstract class Character
     {
-        public double currentHP;
-        public double MaxHP;
-        public double CurrentDM;
-        public double BaseDM;
-        public string Name;
-        Character enemyProverka;
-        public Character Method()
-        {
-            if (GameMode.listCharacter[0].Name == "Зачарованный гоблин by Ваня")
-            {
-                enemyProverka = GameMode.listCharacter[1];
-            }
-            else if (GameMode.listCharacter[1].Name == "Зачарованный гоблин by Ваня")
-            {
-                enemyProverka = GameMode.listCharacter[0];
-            }
-            return enemyProverka;
-        }
-        public virtual double Action(double value, Character enemy)
+        public double currentHP; // текущее значение здоровья
+        public double MaxHP; // максимальное значение здоровья
+        public double CurrentDM; // текущее значение урона
+        public double BaseDM; // базовое значение урона
+        public string Name; // имя персонажа
+        public virtual double ActionHP(double value)
         {
             return value;
         }
@@ -168,7 +149,7 @@ namespace Coursework
             {
                 if (value != currentHP)
                 {
-                    currentHP = Action(value, Method());
+                    currentHP = ActionHP(value);
                 }
             }
         }
@@ -196,17 +177,31 @@ namespace Coursework
             CurrentDM = BaseDM;
             Name = "Зачарованный гоблин by Ваня";
         }
-        public override double Action(double value, Character enemy)
+        public int charge = 1;
+        public int bandage = 2;
+        public double enemyDM;
+        public override double ActionHP(double value)
         {
-            if (0 == 0 + rnd.Next(-3, 3) && value > 0)
+            if (0 == rnd.Next(-1, 1) && value > 0)
             {
-                value = currentHP;
-                GameMode.InsertLog(Name, "Уклонение", enemy.Name);
+                enemyDM = currentHP - value;
+                enemyDM /= 10;
+                value += enemyDM;
+                GameMode.InsertLog(Name, "Блок", "атаки противника");
             }
-            if (0 == 0 + rnd.Next(-1, 1) && value < 0)
+            else if (0 == rnd.Next(-3, 3) && value > 0)
+            {        
+                value = currentHP;
+                GameMode.InsertLog(Name, "Уклонение", "атаки противника");
+            }
+            if (0 == rnd.Next(-1, 1) && value < 0)
             {
-                value = 1;
-                GameMode.InsertLog(Name, "Стойкость", enemy.Name);
+               if (charge > 0)
+               {
+                    charge -= 1;
+                    value = 1;
+                    GameMode.InsertLog(Name, "Стойкость", "атаки противника");
+                }
             }
             return value;
         }
@@ -217,10 +212,18 @@ namespace Coursework
         }
         public void Heal()
         {
-            if (CurrentHP != MaxHP)
+            if (bandage > 0)
             {
-                CurrentHP += 5;
-                GameMode.InsertLog(Name, "Залечил раны", Name);
+                if (CurrentHP != MaxHP)
+                {
+                    CurrentHP += 5;
+                    if (CurrentHP > MaxHP)
+                    {
+                        CurrentHP = MaxHP;
+                    }
+                    bandage -= 1;
+                    GameMode.InsertLog(Name, "Перебинтовался", Name);
+                }
             }
         }
 

@@ -53,7 +53,7 @@ namespace OXO
         {
 
             Form2 obj2 = new Form2(this);
-            //DataForms.ListForms.Add(obj2);
+            DataForms.ListForms.Add(obj2);
             //DataForms.ListForms[1].Show();
             obj2.Show();
             this.Hide();

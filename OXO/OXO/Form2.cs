@@ -15,10 +15,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace OXO
 {
-    public static class Proverka
-    {
-        public static bool pr = false;
-    }
     public partial class Form2 : Form
     {
         static Random rnd = new Random();
@@ -33,7 +29,6 @@ namespace OXO
         static int enemyPort;
         static int XO;
         static bool CheckChoise = false;
-        static int CheckUpdate = 0;
         static bool chekX = false;
         static bool chekO = false;
         static string data;
@@ -42,16 +37,19 @@ namespace OXO
         static int j;
         static int a;
         static int b;
-        Form1 tt;
+        Form1 form1;
         static int ValueArr;
+        public static Form2 form2;
         public Form2(Form1 obj1)
         {
-            tt = obj1;
+            form1 = obj1;
+            form2 = this;
             InitializeComponent();
+
         }
         private void Form2_Load(object sender, EventArgs e)
         {
-            enemy = tt.label3.Text;
+            enemy = form1.label3.Text;
             words = enemy.Split(new char[] { '/' });
             enemyIPAddress = IPAddress.Parse(words[0]);
             enemyPort = Int32.Parse(words[1]);
@@ -59,13 +57,6 @@ namespace OXO
             DisabledButton();
             trec = new Thread(new ThreadStart(Reciver));
             trec.Start();
-            if (Proverka.pr == true)
-            {
-                CheckGroupBoxChoise(CheckChoise);
-                UpdateArray(a, b, ValueArr);
-                UpdateInterface(a, b);
-            }
-            //Record(i, j, hod, CheckChoise);
         }
         public static void Record(int i, int j, int hod, bool CheckChoise)
         {
@@ -110,12 +101,6 @@ namespace OXO
                     byte[] bytes = Recive.Receive(ref RemIPEndPoint);
                     string returnRecive = Encoding.UTF8.GetString(bytes);
                     enemyData = returnRecive.Split(new char[] { '/' });
-                    Console.WriteLine("Receive index 1:" + enemyData[0]);
-                    Console.WriteLine("Receive index 2: " + enemyData[1]);
-                    Console.WriteLine("Receive Array:" + enemyData[2]);
-                    Console.WriteLine("Receive - Hod: " + enemyData[3]);
-                    Console.WriteLine("Receive - CheckChoise: " + enemyData[4]);
-
                     Console.WriteLine("Receive index 1:" + Convert.ToInt32(enemyData[0]));
                     Console.WriteLine("Receive index 2: " + Convert.ToInt32(enemyData[1]));
                     Console.WriteLine("Receive Array:" + Convert.ToInt32(enemyData[2]));
@@ -124,16 +109,12 @@ namespace OXO
 
                     a = Convert.ToInt32(enemyData[0]);
                     b = Convert.ToInt32(enemyData[1]);
+
+                    hod = Convert.ToInt32(enemyData[3]);
                     ValueArr = Convert.ToInt32(enemyData[2]);
                     CheckChoise = Convert.ToBoolean(enemyData[4]);
-                    Proverka.pr = true;
-                    Console.WriteLine(a.GetType());
-                    Console.WriteLine(b.GetType());
-                    Console.WriteLine(ValueArr.GetType());
-                    Console.WriteLine(CheckChoise.GetType());
-
-                   
-                    //CloseThread();
+                    Proverka.Pr = true;
+                    Console.WriteLine(Proverka.pr);
                 }
 
             }
@@ -160,21 +141,24 @@ namespace OXO
                     label14.Text = enemyIPAddress + "/" + enemyPort;
                     label15.Text = you;
                     chekO = true;
-                    Console.WriteLine("CheckGroupBoxChoise работает");
+                    CheckChoise = false;
+                    Record(i, j, hod, CheckChoise);
+                    Console.WriteLine("CheckChoise " + CheckChoise);
                 }
                 else if (hod == 2)
                 {
                     label15.Text = enemyIPAddress + "/" + enemyPort;
                     label14.Text = you;
                     chekX = true;
-                    Console.WriteLine("CheckGroupBoxChoise работает");
+                    CheckChoise = false;
+                    Record(i, j, hod, CheckChoise);
+                    Console.WriteLine("CheckChoise " + CheckChoise);
                 }
-                Console.WriteLine(CheckChoise);
-                Console.WriteLine("CheckGroupBoxChoise работает");
                 EnabledButton();
                 groupBox1.Hide();
             }
         }
+
         public void ChekHod()
         {
             if (hod % 2 != 0)
@@ -204,58 +188,25 @@ namespace OXO
         public void UpdateArray(int a, int b, int ValueArr)
         {
             array[a, b] = ValueArr;
-            Console.WriteLine("Update Array работает");
-            Console.WriteLine(array[0, 0]);
+            Console.WriteLine("Update Array" + array[a, b], ValueArr);
         }
-        public void UpdateInterface(int a, int b)
+        public void UpdateInterface()
         {
-            Console.WriteLine(array[0, 0]);
-            Console.WriteLine(array[a, b]);
-            if (array[0, 0] == array[a, b])
-            {
-                button2.Text = GetValueForButton(array[a, b]);
-                Console.WriteLine(button2.Text);
-                Console.WriteLine("Update interface работает");
-
-            }
-            else if (array[0, 1] == array[a, b])
-            {
-                button3.Text = GetValueForButton(array[0, 1]);
-            }
-            else if (array[0, 2] == array[a, b])
-            {
-                button4.Text = GetValueForButton(array[0, 2]);
-            }
-            else if (array[1, 0] == array[a, b])
-            {
-                button5.Text = GetValueForButton(array[1, 0]);
-            }
-            else if (array[1, 1] == array[a, b])
-            {
-                button6.Text = GetValueForButton(array[1, 1]);
-            }
-            else if (array[1, 2] == array[a, b])
-            {
-                button7.Text = GetValueForButton(array[1, 2]);
-            }
-            else if (array[2, 0] == array[a, b])
-            {
-                button8.Text = GetValueForButton(array[2, 0]);
-            }
-            else if (array[2, 1] == array[a, b])
-            {
-                button9.Text = GetValueForButton(array[2, 1]);
-            }
-            else if (array[2, 2] == array[a, b])
-            {
-                button10.Text = GetValueForButton(array[2, 2]);
-            }
-            Console.WriteLine(array[a, b]);
+            button2.Text = GetValueForButton(array[0, 0]);
+            button3.Text = GetValueForButton(array[0, 1]);
+            button4.Text = GetValueForButton(array[0, 2]);
+            button5.Text = GetValueForButton(array[1, 0]);
+            button6.Text = GetValueForButton(array[1, 1]);
+            button7.Text = GetValueForButton(array[1, 2]);
+            button8.Text = GetValueForButton(array[2, 0]);
+            button9.Text = GetValueForButton(array[2, 1]);
+            button10.Text = GetValueForButton(array[2, 2]);
 
         }
         // Метод для определения текста для кнопки на основе значения в массиве
         public string GetValueForButton(int value)
         {
+            Console.WriteLine("GetValueForButton " + value);
             switch (value)
             {
                 case 0:
@@ -271,7 +222,7 @@ namespace OXO
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
-            tt.Show();
+            form1.Show();
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -297,7 +248,7 @@ namespace OXO
             i = 0;
             j = 0;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -325,7 +276,7 @@ namespace OXO
             i = 0;
             j = 1;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -353,7 +304,7 @@ namespace OXO
             i = 0;
             j = 2;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -381,7 +332,7 @@ namespace OXO
             i = 1;
             j = 0;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -409,7 +360,7 @@ namespace OXO
             i = 1;
             j = 1;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -437,7 +388,7 @@ namespace OXO
             i = 1;
             j = 2;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -465,7 +416,7 @@ namespace OXO
             i = 2;
             j = 0;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
 
@@ -493,7 +444,7 @@ namespace OXO
             i = 2;
             j = 1;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
         private void button10_Click(object sender, EventArgs e)
@@ -520,7 +471,7 @@ namespace OXO
             i = 2;
             j = 2;
             Record(i, j, hod, CheckChoise);
-
+            ChekHod();
             Viktory();
         }
         public void EnabledButton()
@@ -701,6 +652,41 @@ namespace OXO
         private void groupBox1_Enter_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            
+        }
+        public void UpdateAll()
+        {
+            if (Proverka.pr == true)
+            {
+                CheckGroupBoxChoise(CheckChoise);
+                UpdateArray(a, b, ValueArr);
+                UpdateInterface();
+                Proverka.pr = false;
+            }
+            ChekHod();
+            Viktory();
+        }
+    }
+    public static class Proverka
+    {
+        public static bool pr = false;
+        public static bool Pr
+        {
+            get { return pr; }
+            set
+            {
+                if (pr != value)
+                {
+                    Console.WriteLine(value);
+                    pr = value;
+                    Form2.form2.UpdateAll();
+                    Console.WriteLine(value);
+                }
+            }
         }
     }
 }
